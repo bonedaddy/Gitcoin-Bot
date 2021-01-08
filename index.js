@@ -6,11 +6,12 @@ const client = new Discord.Client();
 
 let issues;
 let oldIssues;
-//let lastFetch;
+let lastFetch;
 
 let titles = [];
 
-const API_URL = 'https://gitcoin.co/api/v0.1/bounties/?is_open=true&order_by=-web3_created&network' + '=mainnet';
+const API_URL = 'https://gitcoin.co/api/v0.1/bounties?is_open=true&order_by=-web3_created&network' +
+    '=mainnet';
 
 const createEmbed = (issue) => {
   const expire = new Date(issue.expires_date);
@@ -70,7 +71,7 @@ const getNewIssues = () => {
         .map(createEmbed)
         .filter(issue => !titles.includes(issue.embed.title));
       issues.reverse();
-//      const newIssues = issues.filter(issue => !oldIssues.includes(issue));
+      const newIssues = issues.filter(issue => !oldIssues.includes(issue));
       console.log(titles)
       console.log(issues)
       const gitcoinChannel = client
@@ -131,7 +132,7 @@ client.on('ready', () => {
         channel.send(issue)
       });
       oldIssues = issues;
-      client.setInterval(getNewIssues, 5 * (1000 * 60));
+      client.setInterval(getNewIssues, 60 * (1000 * 60));
       return true;
     })
     .catch(console.log);
